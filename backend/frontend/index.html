@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AUSC Confession</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <div class="card">
+
+      <h1>AUSC Confession Submission</h1>
+
+      <p class="small">
+        ⚠️ আপনার Facebook নাম যেভাবে আছে ঠিক সেভাবেই লিখুন।  
+        ভুল নাম দিলে আপনার confession পোস্ট করা হবে না।
+      </p>
+
+      <form id="confessionForm" enctype="multipart/form-data">
+
+        <label>Facebook Name <span style="color:#ff6b6b">*</span></label>
+        <input type="text" name="fb_name" placeholder="Your Facebook Name" required />
+
+        <div class="grid">
+          <div>
+            <label>From</label>
+            <input type="text" name="from_text" placeholder="Anonymous" />
+          </div>
+          <div>
+            <label>To</label>
+            <input type="text" name="to_text" placeholder="Anonymous" />
+          </div>
+        </div>
+
+        <label>Confession Text <span style="color:#ff6b6b">*</span></label>
+        <textarea name="confession" placeholder="Write your confession here..." required></textarea>
+
+        <label>Caption</label>
+        <textarea name="caption" placeholder="Write a caption (optional)"></textarea>
+
+        <label>Image (optional)</label>
+        <input type="file" name="image" accept="image/*" />
+
+        <button type="submit">Submit Confession</button>
+
+      </form>
+
+      <pre id="responseBox" class="code" style="display:none"></pre>
+
+      <p class="small" style="margin-top:14px">
+        Admin? <a href="admin.html">Go to Admin Panel</a>
+      </p>
+
+    </div>
+  </div>
+
+<script>
+  const form = document.getElementById("confessionForm");
+  const responseBox = document.getElementById("responseBox");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    responseBox.style.display = "block";
+    responseBox.textContent = "Submitting confession...";
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      responseBox.textContent = JSON.stringify(data, null, 2);
+
+      if (data.ok) {
+        form.reset();
+      }
+
+    } catch (err) {
+      responseBox.textContent = "Error submitting confession. Please try again.";
+    }
+  });
+</script>
+
+</body>
+</html>
+
