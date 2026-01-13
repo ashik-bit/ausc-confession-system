@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel | AUSC Confession</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <div class="card">
+
+      <h1>Admin Panel</h1>
+
+      <p class="small">
+        Login using one of the following formats:
+        <br>
+        <b>Password:</b> <code>password:YOUR_PASSWORD</code>
+        <br>
+        <b>Access Key:</b> <code>key:YOUR_ACCESS_KEY</code>
+      </p>
+
+      <label>Admin Auth</label>
+      <input
+        id="authInput"
+        type="text"
+        placeholder="password:... OR key:..."
+      />
+
+      <button id="loadBtn">Load Submissions</button>
+
+      <pre id="resultBox" class="code" style="display:none"></pre>
+
+    </div>
+  </div>
+
+<script>
+  const loadBtn = document.getElementById("loadBtn");
+  const authInput = document.getElementById("authInput");
+  const resultBox = document.getElementById("resultBox");
+
+  loadBtn.addEventListener("click", async () => {
+    resultBox.style.display = "block";
+    resultBox.textContent = "Loading submissions...";
+
+    try {
+      const res = await fetch("/api/admin/submissions", {
+        headers: {
+          "X-ADMIN-AUTH": authInput.value.trim()
+        }
+      });
+
+      const data = await res.json();
+      resultBox.textContent = JSON.stringify(data, null, 2);
+
+    } catch (err) {
+      resultBox.textContent = "Failed to load submissions.";
+    }
+  });
+</script>
+
+</body>
+</html>
