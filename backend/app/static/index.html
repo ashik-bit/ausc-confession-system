@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <title>AUSC Confession</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>AUSC Confession System</h1>
+
+  <form id="f">
+    <input name="fb_name" placeholder="Facebook Name" required><br><br>
+    <textarea name="confession" placeholder="Confession" required></textarea><br><br>
+    <button>Submit</button>
+  </form>
+
+  <pre id="out"></pre>
+
+<script>
+document.getElementById("f").onsubmit = async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const r = await fetch("/api/submit", { method:"POST", body: fd });
+  document.getElementById("out").textContent = await r.text();
+};
+</script>
+</body>
+</html>
